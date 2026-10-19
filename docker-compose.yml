@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  secureship:
+    build: .
+    container_name: secureship-server
+    ports:
+      - "127.0.0.1:5000:5000"
+    volumes:
+      - ./data:/app/data
+      - ./reports:/app/reports
+      # Note: Mounting docker.sock provides Docker access but carries security trade-offs.
+      # For standard local usage, running SecureShip directly on the host is recommended.
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - SECURESHIP_HOST=0.0.0.0
+      - SECURESHIP_PORT=5000
+    restart: unless-stopped

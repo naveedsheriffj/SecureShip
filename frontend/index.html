@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SecureShip — Secure Container Delivery Platform</title>
+  <meta name="description" content="SecureShip DevSecOps delivery gate for container vulnerability scanning and policy enforcement.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- Left Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">S</div>
+      <div>
+        <div class="brand-title">SecureShip</div>
+      </div>
+      <span class="brand-badge">DevSecOps</span>
+    </div>
+
+    <ul class="nav-menu">
+      <li>
+        <a class="nav-item active" data-section="overview">
+          <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+          </svg>
+          Overview
+        </a>
+      </li>
+      <li>
+        <a class="nav-item" data-section="scan">
+          <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+          </svg>
+          Scan Container
+        </a>
+      </li>
+      <li>
+        <a class="nav-item" data-section="scan-detail">
+          <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          Scan Findings
+        </a>
+      </li>
+      <li>
+        <a class="nav-item" data-section="policies">
+          <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+          Security Policies
+        </a>
+      </li>
+      <li>
+        <a class="nav-item" data-section="deployments">
+          <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+          Deployment Gate
+        </a>
+      </li>
+      <li>
+        <a class="nav-item" data-section="history">
+          <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Scan History
+        </a>
+      </li>
+      <li>
+        <a class="nav-item" data-section="settings">
+          <svg class="nav-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+          System Health
+        </a>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="live-indicator">
+        <span class="pulse-dot"></span>
+        <span>GATEKEEPER ACTIVE</span>
+      </div>
+      <div>Localhost Security Enforced</div>
+    </div>
+  </aside>
+
+  <!-- Main Content View Wrapper -->
+  <div class="main-wrapper">
+    <!-- Top Header Bar -->
+    <header class="top-header">
+      <div class="header-title-group">
+        <h1 id="page-heading">SecureShip Delivery Gate</h1>
+        <p id="page-subheading">Pre-Deployment Container Vulnerability Verification & Policy Enforcement</p>
+      </div>
+
+      <div class="header-actions">
+        <span id="header-active-policy" class="badge badge-approved" style="font-size:0.75rem;">Loading Policy...</span>
+        <div style="display:flex; align-items:center; gap:8px; margin-left:12px; font-size:0.75rem; color:var(--text-dim);">
+          <span style="display:flex; align-items:center; gap:4px;">
+            <span id="status-trivy-dot" class="pulse-dot" style="background:#94a3b8; box-shadow:none;"></span> Trivy
+          </span>
+          <span style="display:flex; align-items:center; gap:4px;">
+            <span id="status-docker-dot" class="pulse-dot" style="background:#94a3b8; box-shadow:none;"></span> Docker
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Body Views Container -->
+    <main class="content-body">
+
+      <!-- ================= SECTION: OVERVIEW ================= -->
+      <section id="section-overview" class="view-section active">
+        <!-- 6 Metrics Cards -->
+        <div class="metrics-grid">
+          <div class="metric-card accent-blue">
+            <div class="metric-header">
+              <span class="metric-label">Total Scanned</span>
+              <div class="metric-icon">🔍</div>
+            </div>
+            <div class="metric-value" id="stat-total-scans">0</div>
+            <div class="metric-subtext">Processed through gate</div>
+          </div>
+
+          <div class="metric-card accent-green">
+            <div class="metric-header">
+              <span class="metric-label">Approved (Passed)</span>
+              <div class="metric-icon">✓</div>
+            </div>
+            <div class="metric-value" id="stat-passed-scans" style="color:var(--status-pass);">0</div>
+            <div class="metric-subtext">Satisfied security policy</div>
+          </div>
+
+          <div class="metric-card accent-red">
+            <div class="metric-header">
+              <span class="metric-label">Blocked (Failed)</span>
+              <div class="metric-icon">✕</div>
+            </div>
+            <div class="metric-value" id="stat-failed-scans" style="color:var(--status-fail);">0</div>
+            <div class="metric-subtext">Denied deployment</div>
+          </div>
+
+          <div class="metric-card accent-red">
+            <div class="metric-header">
+              <span class="metric-label">Critical CVEs</span>
+              <div class="metric-icon">☣</div>
+            </div>
+            <div class="metric-value" id="stat-critical-vulns" style="color:var(--sev-critical);">0</div>
+            <div class="metric-subtext">Zero tolerance threshold</div>
+          </div>
+
+          <div class="metric-card accent-amber">
+            <div class="metric-header">
+              <span class="metric-label">High CVEs</span>
+              <div class="metric-icon">⚠</div>
+            </div>
+            <div class="metric-value" id="stat-high-vulns" style="color:var(--sev-high);">0</div>
+            <div class="metric-subtext">Policy blocked findings</div>
+          </div>
+
+          <div class="metric-card accent-cyan">
+            <div class="metric-header">
+              <span class="metric-label">Active Containers</span>
+              <div class="metric-icon">🚢</div>
+            </div>
+            <div class="metric-value" id="stat-active-deployments" style="color:var(--accent-cyan);">0</div>
+            <div class="metric-subtext">Running on 127.0.0.1</div>
+          </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="dashboard-columns">
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">Vulnerability Severity Distribution</div>
+            </div>
+            <div class="panel-body" style="height: 280px; position: relative;">
+              <canvas id="severityChart"></canvas>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">Policy Gate Outcomes</div>
+            </div>
+            <div class="panel-body" style="height: 280px; position: relative;">
+              <canvas id="passFailChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Scans Table -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Recent Scan Activity</div>
+            <button class="btn btn-secondary btn-sm" onclick="App.showSection('scan')">+ New Scan</button>
+          </div>
+          <div class="panel-body" id="dashboard-recent-scans">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+
+        <!-- Recent Audit Events -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Security Gate Audit Log</div>
+          </div>
+          <div class="panel-body" id="dashboard-recent-activity">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION: SCAN ================= -->
+      <section id="section-scan" class="view-section">
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px; margin-bottom:24px;">
+          
+          <!-- Scan Trigger Form -->
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">Scan Container Image</div>
+            </div>
+            <div class="panel-body">
+              <form id="scan-form">
+                <div class="form-group">
+                  <label class="form-label" for="scan-image-input">Docker Image Reference</label>
+                  <input type="text" id="scan-image-input" class="form-input" placeholder="e.g. python:3.11-slim or secureship-demo:1.0" required>
+                  <div class="form-help">Enter an approved local container reference or build an example below.</div>
+                </div>
+
+                <button type="submit" id="btn-start-scan" class="btn btn-primary btn-block">
+                  <svg style="width:16px; height:16px;" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                  </svg>
+                  Scan Image with Trivy
+                </button>
+              </form>
+
+              <!-- Test Fixture Demo Buttons for offline judging -->
+              <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border-subtle);">
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase; font-weight:600;">
+                  Demonstration Scenarios (Deterministic Test Fixtures)
+                </div>
+                <div style="display:flex; gap:10px;">
+                  <button type="button" id="btn-fixture-clean" class="btn btn-secondary btn-sm" style="flex:1;">
+                    Scenario A: Clean Pass
+                  </button>
+                  <button type="button" id="btn-fixture-vuln" class="btn btn-danger btn-sm" style="flex:1;">
+                    Scenario B: Policy Block (High/Crit)
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Build Bundled Example Project -->
+          <div class="panel">
+            <div class="panel-header">
+              <div class="panel-title">Build Bundled Example Image</div>
+            </div>
+            <div class="panel-body">
+              <div class="form-group">
+                <label class="form-label" for="bundled-app-select">Select Bundled Application</label>
+                <select id="bundled-app-select" class="form-select">
+                  <option value="">Loading bundled apps...</option>
+                </select>
+                <div class="form-help">Builds exclusively from fixed <code>examples/</code> directories via safe subprocess.</div>
+              </div>
+
+              <button type="button" id="btn-build-sample" class="btn btn-secondary btn-block">
+                Build Docker Image from Source
+              </button>
+
+              <div id="build-status-msg" style="margin-top:12px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Stepper -->
+        <div id="scan-stepper-box" class="panel" style="display:none;">
+          <div class="panel-header">
+            <div class="panel-title">Security Gate Pipeline</div>
+          </div>
+          <div class="panel-body">
+            <div class="stepper-container">
+              <div class="step-item" id="step-validate">
+                <div class="step-dot">1</div>
+                <div class="step-title">Reference Validation</div>
+              </div>
+              <div class="step-item" id="step-scan">
+                <div class="step-dot">2</div>
+                <div class="step-title">Trivy Scan</div>
+              </div>
+              <div class="step-item" id="step-policy">
+                <div class="step-dot">3</div>
+                <div class="step-title">Policy Evaluation</div>
+              </div>
+              <div class="step-item" id="step-save">
+                <div class="step-dot">4</div>
+                <div class="step-title">Audit Record</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Scan Result -->
+        <div id="scan-quick-result"></div>
+      </section>
+
+      <!-- ================= SECTION: SCAN FINDINGS ================= -->
+      <section id="section-scan-detail" class="view-section">
+        <div id="scan-detail-content">
+          <div class="empty-state">
+            <svg class="empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            <div class="empty-title">No Scan Selected</div>
+            <div class="empty-desc">Execute a scan or select an entry from Scan History to inspect detailed CVE findings and policy decisions.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION: POLICIES ================= -->
+      <section id="section-policies" class="view-section">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Configurable Security Policy Gate</div>
+            <span id="active-policy-version-banner" style="font-size:0.8rem; color:var(--text-muted);">Active Policy</span>
+          </div>
+          <div class="panel-body">
+            <form id="policy-form">
+              <div class="form-group">
+                <label class="form-label" for="pol-name">Policy Revision Name</label>
+                <input type="text" id="pol-name" class="form-input" required>
+              </div>
+
+              <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:20px; margin-bottom:20px;">
+                <div style="background:rgba(0,0,0,0.25); padding:16px; border-radius:6px; border:1px solid var(--border-subtle);">
+                  <div style="font-weight:700; color:var(--sev-critical); margin-bottom:10px;">Critical Severity Rules</div>
+                  <label style="display:flex; align-items:center; gap:8px; cursor:pointer; margin-bottom:10px;">
+                    <input type="checkbox" id="pol-block-critical">
+                    <span>Block on Any CRITICAL Vulnerability</span>
+                  </label>
+                  <label class="form-label">Max Allowed Critical</label>
+                  <input type="number" id="pol-max-critical" class="form-input" min="0" value="0">
+                </div>
+
+                <div style="background:rgba(0,0,0,0.25); padding:16px; border-radius:6px; border:1px solid var(--border-subtle);">
+                  <div style="font-weight:700; color:var(--sev-high); margin-bottom:10px;">High Severity Rules</div>
+                  <label style="display:flex; align-items:center; gap:8px; cursor:pointer; margin-bottom:10px;">
+                    <input type="checkbox" id="pol-block-high">
+                    <span>Block on Any HIGH Vulnerability</span>
+                  </label>
+                  <label class="form-label">Max Allowed High</label>
+                  <input type="number" id="pol-max-high" class="form-input" min="0" value="0">
+                </div>
+
+                <div style="background:rgba(0,0,0,0.25); padding:16px; border-radius:6px; border:1px solid var(--border-subtle);">
+                  <div style="font-weight:700; color:var(--sev-medium); margin-bottom:10px;">Medium & Low Rules</div>
+                  <label class="form-label">Max Allowed Medium</label>
+                  <input type="number" id="pol-max-medium" class="form-input" min="0" value="999">
+                  <label class="form-label" style="margin-top:10px;">Max Allowed Low</label>
+                  <input type="number" id="pol-max-low" class="form-input" min="0" value="999">
+                </div>
+
+                <div style="background:rgba(0,0,0,0.25); padding:16px; border-radius:6px; border:1px solid var(--border-subtle);">
+                  <div style="font-weight:700; color:#cbd5e1; margin-bottom:10px;">Fail-Closed Integrity</div>
+                  <label style="display:flex; align-items:center; gap:8px; cursor:pointer; margin-bottom:10px;">
+                    <input type="checkbox" id="pol-reject-unknown">
+                    <span>Reject on UNKNOWN Severity</span>
+                  </label>
+                  <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                    <input type="checkbox" id="pol-reject-error">
+                    <span>Reject on Scanner Error / Timeout</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="pol-reason">Change Justification (Mandatory Audit Requirement)</label>
+                <textarea id="pol-reason" class="form-textarea" rows="2" placeholder="Explain the rationale for modifying the security threshold..." required></textarea>
+              </div>
+
+              <button type="submit" id="btn-save-policy" class="btn btn-primary">
+                Save & Enforce New Policy Revision
+              </button>
+
+              <div id="policy-status-msg" style="margin-top:14px;"></div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Historical Policy Revisions -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Policy Revision History</div>
+          </div>
+          <div class="panel-body" id="policy-history-table">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION: DEPLOYMENTS ================= -->
+      <section id="section-deployments" class="view-section">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Controlled Localhost Deployment Gate</div>
+          </div>
+          <div class="panel-body">
+            <form id="deployment-form">
+              <div style="display:grid; grid-template-columns: 2fr 1fr; gap:20px; margin-bottom:16px;">
+                <div class="form-group">
+                  <label class="form-label" for="deploy-scan-select">Select Completed Scan Record</label>
+                  <select id="deploy-scan-select" class="form-select">
+                    <option value="">Loading completed scans...</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="deploy-image-input">Target Image Reference</label>
+                  <input type="text" id="deploy-image-input" class="form-input" placeholder="Image will be populated from scan" readonly>
+                </div>
+              </div>
+
+              <div id="deploy-gate-preview" style="display:none; margin-bottom:16px;"></div>
+
+              <!-- 8-Gate Security Checklist Display -->
+              <div class="panel" style="margin-bottom:20px; background:rgba(0,0,0,0.2);">
+                <div class="panel-header" style="padding:12px 18px;">
+                  <div style="font-size:0.85rem; font-weight:700; color:#fff;">Mandatory 8-Point Gatekeeper Verification</div>
+                </div>
+                <div class="panel-body" style="padding:16px;">
+                  <div class="gate-checklist">
+                    <div class="gate-item">
+                      <div class="gate-info">
+                        <span class="gate-number">Gate 1</span>
+                        <span>Completed, valid scan exists in database</span>
+                      </div>
+                      <span class="sev-pill sev-low">Verified</span>
+                    </div>
+                    <div class="gate-item">
+                      <div class="gate-info">
+                        <span class="gate-number">Gate 2</span>
+                        <span>Scan belongs strictly to the requested image tag</span>
+                      </div>
+                      <span class="sev-pill sev-low">Verified</span>
+                    </div>
+                    <div class="gate-item">
+                      <div class="gate-info">
+                        <span class="gate-number">Gate 3</span>
+                        <span>Image reference strictly satisfies regex allowlist</span>
+                      </div>
+                      <span class="sev-pill sev-low">Verified</span>
+                    </div>
+                    <div class="gate-item">
+                      <div class="gate-info">
+                        <span class="gate-number">Gate 4</span>
+                        <span>Scan passed security policy at scan time</span>
+                      </div>
+                      <span class="sev-pill sev-low">Verified</span>
+                    </div>
+                    <div class="gate-item">
+                      <div class="gate-info">
+                        <span class="gate-number">Gate 5</span>
+                        <span>Re-evaluation against the active policy revision</span>
+                      </div>
+                      <span class="sev-pill sev-low">Verified</span>
+                    </div>
+                    <div class="gate-item">
+                      <div class="gate-info">
+                        <span class="gate-number">Gate 6</span>
+                        <span>Local immutable Image ID matches scanned identity</span>
+                      </div>
+                      <span class="sev-pill sev-low">Verified</span>
+                    </div>
+                    <div class="gate-item">
+                      <div class="gate-info">
+                        <span class="gate-number">Gate 7</span>
+                        <span>Authentic scan verification (Fixtures blocked from real launch)</span>
+                      </div>
+                      <span class="sev-pill sev-low">Verified</span>
+                    </div>
+                    <div class="gate-item">
+                      <div class="gate-info">
+                        <span class="gate-number">Gate 8</span>
+                        <span>Host restriction (127.0.0.1 bound, restricted ports 5010-5050)</span>
+                      </div>
+                      <span class="sev-pill sev-low">Verified</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" id="btn-execute-deploy" class="btn btn-primary">
+                Execute Gated Deployment
+              </button>
+
+              <div id="deployment-result-box" style="margin-top:16px;"></div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Deployments List -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Active & Historical Deployments</div>
+          </div>
+          <div class="panel-body" id="deployments-table-container">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION: HISTORY ================= -->
+      <section id="section-history" class="view-section">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">Persistent Scan History</div>
+          </div>
+          <div class="panel-body" id="scan-history-table-container">
+            <!-- Loaded dynamically -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION: SETTINGS ================= -->
+      <section id="section-settings" class="view-section">
+        <div id="system-health-content">
+          <!-- Loaded dynamically -->
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/scans.js"></script>
+  <script src="js/policies.js"></script>
+  <script src="js/deployments.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
